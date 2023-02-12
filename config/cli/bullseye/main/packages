@@ -1,6 +1,6 @@
 bc
+cracklib-runtime
 chrony
-cpufrequtils
 debconf-utils
 device-tree-compiler
 dialog
@@ -8,11 +8,9 @@ fake-hwclock
 figlet
 fping
 ncurses-term
-nocache
 openssh-server
 parted
 psmisc
-python3-apt
 smartmontools
 sysfsutils
 toilet

@@ -1,8 +1,6 @@
-cracklib-runtime
 curl
 htop
 i2c-tools
-iozone3
 jq
 libcrack2
 lsof
@@ -16,3 +14,4 @@ resolvconf
 sysstat
 wget
 wireless-tools
+wpasupplicant

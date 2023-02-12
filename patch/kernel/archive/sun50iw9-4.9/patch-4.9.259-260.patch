@@ -721,7 +721,8 @@ diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
 index d64a53d3270a1..7ab4152150629 100644
 --- a/drivers/block/zram/zram_drv.c
 +++ b/drivers/block/zram/zram_drv.c
-@@ -440,7 +440,7 @@ static ssize_t mm_stat_show(struct device *dev,
+@@ -1065,7 +1065,7 @@ static ssize_t mm_stat_show(struct device *dev,
+ 			zram->limit_pages << PAGE_SHIFT,
  			max_used << PAGE_SHIFT,
  			(u64)atomic64_read(&zram->stats.same_pages),
 -			pool_stats.pages_compacted,
@@ -729,7 +730,6 @@ index d64a53d3270a1..7ab4152150629 100644
  			(u64)atomic64_read(&zram->stats.huge_pages));
  	up_read(&zram->init_lock);
  
- 	return ret;
 diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
 index 9803135f2e593..96e9c25926e17 100644
 --- a/drivers/media/usb/uvc/uvc_driver.c

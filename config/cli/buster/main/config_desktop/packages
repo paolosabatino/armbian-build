@@ -4,8 +4,8 @@ bridge-utils
 build-essential
 ca-certificates
 console-setup
-crda
 expect
+fonts-ubuntu
 fbset
 flex
 html2text

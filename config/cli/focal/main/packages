@@ -1,6 +1,6 @@
 bc
 chrony
-cpufrequtils
+cracklib-runtime
 debconf-utils
 device-tree-compiler
 dialog
@@ -8,7 +8,6 @@ fake-hwclock
 figlet
 fping
 ncurses-term
-nocache
 openssh-server
 parted
 psmisc

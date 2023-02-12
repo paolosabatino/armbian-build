@@ -229,59 +229,6 @@ index c528f96ee204f..07de755ca30c5 100644
  	help
  	  This option gives you AGP GART support for the HP Quicksilver
  	  AGP bus adapter on HP PA-RISC machines (Ok, just on the C8000
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index af4f2ffc4fc50..9d60b3f219f6b 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2945,35 +2945,29 @@ void __clk_put(struct clk *clk)
- int clk_notifier_register(struct clk *clk, struct notifier_block *nb)
- {
- 	struct clk_notifier *cn;
--	int ret = -ENOMEM;
-+	int ret = -ENOENT;
- 
- 	if (!clk || !nb)
- 		return -EINVAL;
- 
- 	clk_prepare_lock();
- 
--	/* search the list of notifiers for this clk */
--	list_for_each_entry(cn, &clk_notifier_list, node)
--		if (cn->clk == clk)
--			break;
--
--	/* if clk wasn't in the notifier list, allocate new clk_notifier */
--	if (cn->clk != clk) {
--		cn = kzalloc(sizeof(struct clk_notifier), GFP_KERNEL);
--		if (!cn)
--			goto out;
-+	list_for_each_entry(cn, &clk_notifier_list, node) {
-+		if (cn->clk == clk) {
-+			ret = srcu_notifier_chain_unregister(&cn->notifier_head, nb);
- 
--		cn->clk = clk;
--		srcu_init_notifier_head(&cn->notifier_head);
-+			clk->core->notifier_count--;
- 
--		list_add(&cn->node, &clk_notifier_list);
-+			/* XXX the notifier code should handle this better */
-+			if (!cn->notifier_head.head) {
-+				srcu_cleanup_notifier_head(&cn->notifier_head);
-+				list_del(&cn->node);
-+				kfree(cn);
-+			}
-+			break;
-+		}
- 	}
- 
--	ret = srcu_notifier_chain_register(&cn->notifier_head, nb);
--
--	clk->core->notifier_count++;
--
--out:
- 	clk_prepare_unlock();
- 
- 	return ret;
 diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
 index aa7a6e6a15b65..14918896811d6 100644
 --- a/drivers/clk/socfpga/clk-gate.c

@@ -18,13 +18,13 @@ gcr
 gdebi
 ghostscript-x
 gnome-keyring
+gnome-disk-utility
 gstreamer1.0-packagekit
 gstreamer1.0-plugins-base-apps
 gtk2-engines
 gtk2-engines-murrine
 gtk2-engines-pixbuf
 gvfs-backends
-hunspell-en-us
 inputattach
 keyutils
 libatk-adaptor
@@ -69,10 +69,7 @@ lxsession-logout
 lxtask
 lxterminal
 network-manager-gnome
-network-manager-l2tp
-network-manager-openconnect
 network-manager-openvpn-gnome
-network-manager-pptp
 network-manager-vpnc
 numix-gtk-theme
 openbox-lxde-session
@@ -112,10 +109,8 @@ xfonts-100dpi
 xfonts-75dpi
 xfonts-base
 xfonts-scalable
-xinit
 xorg-docs
 xorg-docs-core
 xscreensaver
 xserver-xorg
 xserver-xorg-video-fbdev
-zip

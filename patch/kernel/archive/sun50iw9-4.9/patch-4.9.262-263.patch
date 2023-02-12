@@ -896,7 +896,7 @@ diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
 index 5e6436741f968..330794252270d 100644
 --- a/include/linux/thread_info.h
 +++ b/include/linux/thread_info.h
-@@ -9,7 +9,8 @@
+@@ -9,6 +9,7 @@
  
  #include <linux/types.h>
  #include <linux/bug.h>
@@ -904,7 +904,6 @@ index 5e6436741f968..330794252270d 100644
 +#include <linux/errno.h>
  
  #ifdef CONFIG_THREAD_INFO_IN_TASK
- /*
 @@ -59,6 +60,18 @@ extern long do_no_restart_syscall(struct restart_block *parm);
  
  #ifdef __KERNEL__

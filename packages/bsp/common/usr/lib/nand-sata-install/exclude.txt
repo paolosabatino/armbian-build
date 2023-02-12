@@ -6,3 +6,5 @@
 /mnt/*
 /run/*
 /tmp/*
+/ddbr/*
+/var/log/journal
