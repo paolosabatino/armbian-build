@@ -1,0 +1,122 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-mxq-s905-v20.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-mxq-s905-v20.dts
+new file mode 100644
+index 00000000000..e66e0f8bc63
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-mxq-s905-v20.dts
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2016 Andreas Färber
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@kernel.org>
++ */
++
++/dts-v1/;
++
++#include "meson-gxbb-p20x.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "nexbox,mxq-s905-v20", "amlogic,meson-gxbb";
++	model = "MXQ S905 V20";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++
++	reserved-memory {
++		// Reduce CMA reserved memory to 128 Mb due to only 1 Gb of main ram
++		linux,cma {
++                        compatible = "shared-dma-pool";
++                        reusable;
++                        size = <0x0 0x8000000>;
++                        alignment = <0x0 0x400000>;
++                        linux,cma-default;
++                };
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		blue {
++			label = "system-status";
++			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc1";
++			default-state = "off";
++		};
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <100>;
++
++		button@0 {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
++		};
++	};
++	
++	avdd18_usb_adc: regulator-avdd18_usb_adc {
++		compatible = "regulator-fixed";
++		regulator-name = "AVDD18_USB_ADC";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++};
++
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rmii_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rmii";
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* IC Plus IP101GR (0x02430c54) */
++			reg = <0>;
++		};
++	};
++};
++
++/* Wireless SDIO Module */
++&sd_emmc_a {
++	/delete-node/ brcmf;
++};
++
++&i2c_B {
++	status = "okay";
++	pinctrl-0 = <&i2c_b_pins>;
++	pinctrl-names = "default";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&avdd18_usb_adc>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index e213aeebb77..d78809bbe01 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -17,6 +17,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-mxq-s905-v20.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
