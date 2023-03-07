@@ -1,9 +1,9 @@
 diff --git a/arch/arm/dts/rk322x-box.dts b/arch/arm/dts/rk322x-box.dts
 new file mode 100755
-index 00000000..eb47f976
+index 0000000000..bbde329fbb
 --- /dev/null
 +++ b/arch/arm/dts/rk322x-box.dts
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,73 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR X11
 +/*
 + * (C) Copyright 2017 Rockchip Electronics Co., Ltd.
@@ -54,6 +54,7 @@ index 00000000..eb47f976
 +
 +&sdmmc {
 +	cd-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4 &sdmmc_pwr>;
 +	status = "okay";
 +
 +};
@@ -66,6 +67,12 @@ index 00000000..eb47f976
 +	gpio {
 +		gpio_leds: gpio-leds {
 +			rockchip,pins = <3 21 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++	
++	sdmmc {
++		sdmmc_pwr: sdmmc-pwr {
++			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
