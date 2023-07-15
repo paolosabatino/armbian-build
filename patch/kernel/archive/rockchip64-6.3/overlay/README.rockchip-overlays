@@ -161,6 +161,13 @@ system. Also enables gpio leds and keys.
 
 Generic rk3318-box configuration but with sdio chip on sdmmc-ext connector
 
+### rk3318-box-led-conf5
+
+Very similar board configuration to led-conf3, but suitable for boards
+with marking MINI RK3328_D32. The board has an integrated PMIC (RK805), but
+differently from led-conf3, the wifi chip is enabled for different GPIO
+pin.
+
 ### rk3318-box-emmc-ddr
 
 Activates eMMC DDR capability for rk3318 tv box boards. Probably all the eMMC chips
