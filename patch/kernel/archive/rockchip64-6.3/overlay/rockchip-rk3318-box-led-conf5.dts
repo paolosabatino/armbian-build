@@ -285,7 +285,7 @@
 };
 
 &sdio_pwrseq {
-	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_HIGH>;
+	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>;
 };
 
 /*
@@ -298,7 +298,7 @@
 
 &sdio_ext {
 	rockchip,default-sample-phase = <112>; // Allows ssv6051 chips to be detected at 50 MHz
-	sd-uhs-sdr50;
+	//sd-uhs-sdr50; // Requires vmmc and vqmmc properties to work
 	mmc-pwrseq = <&sdio_pwrseq>;
 	status = "okay";
 };
