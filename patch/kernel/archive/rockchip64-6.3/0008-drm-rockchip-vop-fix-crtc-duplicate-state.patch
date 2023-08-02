@@ -1,0 +1,34 @@
+From 1104147531a7959aced69f6af42dd92471a79c54 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 15 Jul 2020 15:24:47 +0000
+Subject: [PATCH 08/46] drm/rockchip: vop: fix crtc duplicate state
+
+struct rockchip_crtc_state owned members is always reset to zero in
+the atomic_duplicate_state callback.
+Fix this by using kmemdup on the subclass state structure.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 950c89d9ac70..0e47b0d9e06d 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -1630,7 +1630,11 @@ static struct drm_crtc_state *vop_crtc_duplicate_state(struct drm_crtc *crtc)
+ 	if (WARN_ON(!crtc->state))
+ 		return NULL;
+ 
+-	rockchip_state = kzalloc(sizeof(*rockchip_state), GFP_KERNEL);
++	if (WARN_ON(!crtc->state))
++		return NULL;
++
++	rockchip_state = kmemdup(to_rockchip_crtc_state(crtc->state),
++				 sizeof(*rockchip_state), GFP_KERNEL);
+ 	if (!rockchip_state)
+ 		return NULL;
+ 
+-- 
+2.34.1
+

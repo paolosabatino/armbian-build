@@ -1,0 +1,33 @@
+From 0d558f41d65a5a4a8226b81dc21f527035bb5967 Mon Sep 17 00:00:00 2001
+From: Alex Bee <knaerzche@gmail.com>
+Date: Tue, 1 Jun 2021 19:24:37 +0200
+Subject: [PATCH 43/46] drm/rockchip: allow 4096px width modes
+
+There is not reason to limit vop output to 3840px width modes.
+Also drop the limitation from dw_hdmi_rockchip_mode_valid, since
+the max dimenstions of the actual vop version is validated in
+vop_crtc_mode_valid anyways.
+
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index e6d29f429925..8eda4bb11886 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -417,8 +417,8 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+ 	if (info->is_yuv)
+ 		is_yuv = true;
+ 
+-	if (dst_w > 3840) {
+-		DRM_DEV_ERROR(vop->dev, "Maximum dst width (3840) exceeded\n");
++	if (dst_w > 4096) {
++		DRM_DEV_ERROR(vop->dev, "Maximum dst width (4096) exceeded\n");
+ 		return;
+ 	}
+ 
+-- 
+2.34.1
+

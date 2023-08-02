@@ -1,0 +1,48 @@
+From c50d30e22ca7652ab4bfe19412e8bad69d7b6b91 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Sat, 10 Oct 2020 10:16:32 +0000
+Subject: [PATCH 20/46] drm/rockchip: dw-hdmi: encoder error handling
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 6ad8a47d34de..65798898f665 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -559,7 +559,7 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 	if (IS_ERR(hdmi->phy)) {
+ 		ret = PTR_ERR(hdmi->phy);
+ 		if (ret != -EPROBE_DEFER)
+-			DRM_DEV_ERROR(hdmi->dev, "failed to get phy\n");
++			DRM_DEV_ERROR(hdmi->dev, "Failed to get phy: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -591,7 +591,12 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 	}
+ 
+ 	drm_encoder_helper_add(encoder, &dw_hdmi_rockchip_encoder_helper_funcs);
+-	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
++
++	ret = drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
++	if (ret) {
++		DRM_DEV_ERROR(hdmi->dev, "Failed to init encoder: %d\n", ret);
++		goto err_disable_clk;
++	}
+ 
+ 	platform_set_drvdata(pdev, hdmi);
+ 
+@@ -610,6 +615,7 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 
+ err_bind:
+ 	drm_encoder_cleanup(encoder);
++err_disable_clk:
+ 	clk_disable_unprepare(hdmi->ref_clk);
+ err_clk:
+ 	regulator_disable(hdmi->avdd_1v8);
+-- 
+2.34.1
+
