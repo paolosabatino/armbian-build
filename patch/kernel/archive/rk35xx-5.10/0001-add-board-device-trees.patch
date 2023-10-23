@@ -1,0 +1,24 @@
+From 75c2fcb7b092ea6af313f6bb9bd204d690a80106 Mon Sep 17 00:00:00 2001
+From: Paolo Sabatino <paolo.sabatino@gmail.com>
+Date: Sat, 21 Oct 2023 20:06:50 +0200
+Subject: [PATCH 1/2] add board device trees
+
+---
+ arch/arm64/boot/dts/rockchip/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index c775f40e580a..c57141b8ea8a 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -76,6 +76,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator-edp-avb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-rock-pi-n10.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-box.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-demo1-lp4-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-demo4-ddr4-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3528-demo4-ddr4-v10-linux.dtb
+-- 
+2.34.1
+
