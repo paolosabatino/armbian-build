@@ -1,0 +1,51 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+index 029e72547caa..57bc868da56c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+@@ -1017,33 +1017,23 @@ gpu: gpu@ff700000 {
+ 			     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "Mali_GP_IRQ",
+-				  "Mali_GP_MMU_IRQ",
+-				  "IRQPP",
+-				  "Mali_PP0_IRQ",
+-				  "Mali_PP0_MMU_IRQ",
+-				  "Mali_PP1_IRQ",
+-				  "Mali_PP1_MMU_IRQ";
+-		clocks = <&scmi_clk SCMI_CLK_GPU>, <&cru ACLK_GPU_MALI>,
+-			 <&cru PCLK_GPU_ROOT>;
+-		clock-names = "clk_mali", "aclk_gpu_mali", "pclk_gpu";
+-		assigned-clocks = <&scmi_clk SCMI_CLK_GPU>;
+-		assigned-clock-rates = <300000000>;
++		interrupt-names = "gp",
++				  "gpmmu",
++				  "pp",
++				  "pp0",
++				  "ppmmu0",
++				  "pp1",
++				  "ppmmu1";
++		clocks = <&scmi_clk SCMI_CLK_GPU>, <&cru ACLK_GPU_MALI>;
++		clock-names = "bus", "core";
++		resets = <&cru SRST_ARESETN_GPU>;
++		//assigned-clocks = <&scmi_clk SCMI_CLK_GPU>;
++		//assigned-clock-rates = <300000000>;
+ 		power-domains = <&power RK3528_PD_GPU>;
+ 		operating-points-v2 = <&gpu_opp_table>;
+ 		#cooling-cells = <2>;
+-		rockchip,grf = <&grf>;
+-		status = "disabled";
+ 
+-		gpu_power_model: power-model {
+-			compatible = "simple-power-model";
+-			leakage-range= <1 3>;
+-			ls = <(-15658) 67354 0>;
+-			static-coefficient = <10000>;
+-			dynamic-coefficient = <724>;
+-			ts = <3156546 120154 (-2506) 39>;
+-			thermal-zone = "soc-thermal";
+-		};
++		status = "disabled";
+ 	};
+ 
+ 	gpu_opp_table: gpu-opp-table {
