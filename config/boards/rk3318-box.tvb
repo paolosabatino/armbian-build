@@ -21,3 +21,11 @@ function post_family_tweaks_bsp__rk3318-box() {
 
 	return 0
 }
+
+function post_family_config___uboot_config() {
+
+	BOOTDELAY=1
+
+	return 0
+
+}

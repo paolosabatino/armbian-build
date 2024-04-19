@@ -1,0 +1,102 @@
+From a435e31f40598fc83908f27fa6c9142b9ada1ee9 Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Thu, 16 Feb 2023 20:34:05 +0530
+Subject: [PATCH] phy: Add new generic-phy ops
+
+- generic_phy_set_pll
+- generic_phy_set_bus_width
+- generic_phy_round_rate
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/phy/phy-uclass.c | 48 ++++++++++++++++++++++++++++++++++++++++
+ include/generic-phy.h    | 10 +++++++++
+ 2 files changed, 58 insertions(+)
+
+diff --git a/drivers/phy/phy-uclass.c b/drivers/phy/phy-uclass.c
+index 3fef5135a9c..d0bac623715 100644
+--- a/drivers/phy/phy-uclass.c
++++ b/drivers/phy/phy-uclass.c
+@@ -206,6 +206,54 @@ int generic_phy_get_by_name(struct udevice *dev, const char *phy_name,
+ 	return generic_phy_get_by_index(dev, index, phy);
+ }
+ 
++unsigned long generic_phy_set_pll(struct phy *phy, unsigned long rate)
++{
++	struct phy_ops const *ops;
++	int ret;
++
++	if (!generic_phy_valid(phy))
++		return 0;
++	ops = phy_dev_ops(phy->dev);
++	if (!ops->set_pll)
++		return 0;
++	ret = ops->set_pll(phy, rate);
++	if (ret)
++		dev_err(phy->dev, "PHY: Failed to set_pll %s: %d.\n",
++			phy->dev->name, ret);
++
++	return ret;
++}
++
++int generic_phy_set_bus_width(struct phy *phy, u32 bus_width)
++{
++	struct phy_ops const *ops;
++	int ret;
++
++	if (!generic_phy_valid(phy))
++		return 0;
++	ops = phy_dev_ops(phy->dev);
++	if (!ops->set_bus_width)
++		return 0;
++	ret = ops->set_bus_width(phy, bus_width);
++	if (ret)
++		dev_err(phy->dev, "PHY: Failed to set_bus_width %s: %d.\n",
++			phy->dev->name, ret);
++
++	return ret;
++}
++
++long generic_phy_round_rate(struct phy *phy, unsigned long rate)
++{
++	struct phy_ops const *ops;
++
++	if (!generic_phy_valid(phy))
++		return 0;
++	ops = phy_dev_ops(phy->dev);
++	if (!ops->round_rate)
++		return 0;
++	return ops->round_rate(phy, rate);
++}
++
+ int generic_phy_init(struct phy *phy)
+ {
+ 	struct phy_counts *counts;
+diff --git a/include/generic-phy.h b/include/generic-phy.h
+index f8eddeff67a..0713e2c346c 100644
+--- a/include/generic-phy.h
++++ b/include/generic-phy.h
+@@ -136,6 +136,10 @@ struct phy_ops {
+ 	* Return: 0 if OK, or a negative error code
+ 	*/
+ 	int	(*configure)(struct phy *phy, void *params);
++
++	unsigned long	(*set_pll)(struct phy *phy, unsigned long rate);
++	int	(*set_bus_width)(struct phy *phy, u32 bus_width);
++	long	(*round_rate)(struct phy *phy, unsigned long rate);
+ };
+ 
+ /**
+@@ -362,6 +366,12 @@ int generic_setup_phy(struct udevice *dev, struct phy *phy, int index);
+  */
+ int generic_shutdown_phy(struct phy *phy);
+ 
++unsigned long generic_phy_set_pll(struct phy *phy, unsigned long rate);
++
++int generic_phy_set_bus_width(struct phy *phy, u32 bus_width);
++
++long generic_phy_round_rate(struct phy *phy, unsigned long rate);
++
+ #else /* CONFIG_PHY */
+ 
+ static inline int generic_phy_init(struct phy *phy)
