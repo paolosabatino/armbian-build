@@ -9,7 +9,7 @@ function extension_prepare_config__3d() {
 	# Silently deny old releases which are not supported but are still in the system
 	[[ "${RELEASE}" =~ ^(bullseye|buster|focal)$ ]] && return 0
 
-	# Silently deny on minimal CLI images
+	# Deny on minimal CLI images
 	if [[ "${BUILD_MINIMAL}" == "yes" ]]; then
 		display_alert "Extension: ${EXTENSION}" "skip installation in minimal images" "warn"
 		return 0
@@ -29,7 +29,11 @@ function extension_prepare_config__3d() {
 
 	# This should be enabled on all for rk3588 distributions where mesa and vendor kernel is present
 	if [[ "${LINUXFAMILY}" =~ ^(rockchip-rk3588|rk35xx)$ && "$BRANCH" == vendor ]]; then
-		declare -g DEFAULT_OVERLAYS="panthor-gpu"
+		if [[ -n $DEFAULT_OVERLAYS ]]; then
+			DEFAULT_OVERLAYS+=" panthor-gpu"
+		else
+			declare -g DEFAULT_OVERLAYS="panthor-gpu"
+		fi
 	fi
 
 }
@@ -37,6 +41,12 @@ function extension_prepare_config__3d() {
 function post_install_kernel_debs__3d() {
 	# Silently deny old releases which are not supported but are still in the system
 	[[ "${RELEASE}" =~ ^(bullseye|buster|focal)$ ]] && return 0
+
+	# Deny on minimal CLI images
+	if [[ "${BUILD_MINIMAL}" == "yes" ]]; then
+		display_alert "Extension: ${EXTENSION}" "skip installation in minimal images" "warn"
+		return 0
+	fi
 
 	# some desktops doesn't support wayland
 	[[ "${DESKTOP_ENVIRONMENT}" == "xfce" || "${DESKTOP_ENVIRONMENT}" == "i3-wm" ]] && return 0
@@ -110,12 +120,6 @@ function post_install_kernel_debs__3d() {
 
 			pkgs+=("chromium")
 		fi
-	elif [[ "${DISTRIBUTION}" == "Debian" && "${RELEASE}" == "bookworm" ]]; then
-
-		display_alert "Adding mesa backport repo for ${RELEASE} from OBS" "${EXTENSION}" "info"
-		echo 'deb http://download.opensuse.org/repositories/home:/amazingfate:/mesa-bookworm-backport/Debian_12/ /' | tee "${SDCARD}"/etc/apt/sources.list.d/home:amazingfate:mesa-bookworm-backport.list
-		curl -fsSL https://download.opensuse.org/repositories/home:amazingfate:mesa-bookworm-backport/Debian_12/Release.key | gpg --dearmor | tee "${SDCARD}"/etc/apt/trusted.gpg.d/home_amazingfate_mesa-bookworm-backport.gpg > /dev/null
-
 	fi
 
 	if [[ "${BUILD_DESKTOP}" == "yes" ]]; then # if desktop, add amazingfated's multimedia PPAs and rockchip-multimedia-config utility, chromium, gstreamer, etc
@@ -150,7 +154,11 @@ function post_install_kernel_debs__3d() {
 	fi
 
 	display_alert "Installing 3D extension packages" "${EXTENSION}" "info"
-	do_with_retries 3 chroot_sdcard_apt_get_install "${pkgs[@]}"
+	if [[ "${DISTRIBUTION}" == "Debian" && "${RELEASE}" == "bookworm" ]]; then
+		do_with_retries 3 chroot_sdcard_apt_get_install -t bookworm-backports "${pkgs[@]}"
+	else
+		do_with_retries 3 chroot_sdcard_apt_get_install "${pkgs[@]}"
+	fi
 
 	# This library gets downgraded
 	if [[ "${BUILD_DESKTOP}" == "yes" ]]; then
