@@ -1,33 +1,22 @@
-diff --git a/arch/arm/boot/.gitignore b/arch/arm/boot/.gitignore
-index 3c79f859..4e5c1d59 100644
---- a/arch/arm/boot/.gitignore
-+++ b/arch/arm/boot/.gitignore
-@@ -3,3 +3,5 @@ zImage
- xipImage
- bootpImage
- uImage
-+*.dtb*
-+*.scr
 diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
-index 50d580d77..94bd15617 100644
+index 05765ae34021..4b62a42e9022 100644
 --- a/scripts/Makefile.dtbinst
 +++ b/scripts/Makefile.dtbinst
-@@ -18,9 +18,12 @@ include scripts/Kbuild.include
- include $(src)/Makefile
+@@ -19,10 +19,11 @@ include $(src)/Makefile
  
  dtbs    := $(addprefix $(dst)/, $(dtb-y) $(if $(CONFIG_OF_ALL_DTBS),$(dtb-)))
-+dtbos   := $(addprefix $(dst)/, $(dtbo-y))
+ dtbos   := $(addprefix $(dst)/, $(dtbo-y))
 +scrs    := $(addprefix $(dst)/, $(scr-y))
-+readmes := $(addprefix $(dst)/, $(dtbotxt-y))
+ readmes := $(addprefix $(dst)/, $(dtbotxt-y))
  subdirs := $(addprefix $(obj)/, $(subdir-y) $(subdir-m))
  
--__dtbs_install: $(dtbs) $(subdirs)
+-__dtbs_install: $(dtbs) $(dtbos) $(readmes) $(subdirs)
 +__dtbs_install: $(dtbs) $(dtbos) $(scrs) $(readmes) $(subdirs)
  	@:
  
  quiet_cmd_dtb_install = INSTALL $@
-@@ -29,6 +32,15 @@ quiet_cmd_dtb_install = INSTALL $@
- $(dst)/%.dtb: $(obj)/%.dtb
+@@ -37,6 +38,15 @@ $(dst)/%.dtbo: $(obj)/%.dtbo
+ $(dst)/README.rockchip-overlays: $(src)/README.rockchip-overlays
  	$(call cmd,dtb_install)
  
 +$(dst)/%.dtbo: $(obj)/%.dtbo
@@ -43,23 +32,23 @@ index 50d580d77..94bd15617 100644
  $(subdirs):
  	$(Q)$(MAKE) $(dtbinst)=$@ dst=$(patsubst $(obj)/%,$(dst)/%,$@)
 diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 58c05e5d..2b95dda9 100644
+index 7646ebf9d552..e8b0ba897c6b 100644
 --- a/scripts/Makefile.lib
 +++ b/scripts/Makefile.lib
-@@ -278,6 +278,9 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
- # ---------------------------------------------------------------------------
- DTC ?= $(objtree)/scripts/dtc/dtc
-
+@@ -352,6 +352,9 @@ endif
+ # Overlay support
+ DTC_FLAGS += -@ -Wno-unit_address_format -Wno-simple_bus_reg
+ 
 +# Overlay support
 +DTC_FLAGS += -@ -Wno-unit_address_format -Wno-simple_bus_reg
 +
  # Disable noisy checks by default
- ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
  DTC_FLAGS += -Wno-unit_address_vs_reg \
-@@ -324,6 +327,23 @@ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- $(obj)/%.dtb: $(src)/%.dts FORCE
- 	$(call if_changed_dep,dtc)
-
+@@ -435,6 +438,23 @@ cmd_dtco = mkdir -p $(dir ${dtc-tmp}) ; \
+ $(obj)/%.dtbo: $(src)/%.dts FORCE
+ 	$(call if_changed_dep,dtco)
+ 
 +quiet_cmd_dtco = DTCO    $@
 +cmd_dtco = mkdir -p $(dir ${dtc-tmp}) ; \
 +	$(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
@@ -78,5 +67,5 @@ index 58c05e5d..2b95dda9 100644
 +	$(call if_changed,scr)
 +
  dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
-
+ 
  # Bzip2
