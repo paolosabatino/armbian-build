@@ -39,16 +39,7 @@ Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
 index 38dded2baaf7..9e460b7e14a4 100644
 --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -592,7 +592,7 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
- 	if (IS_ERR(hdmi->phy)) {
- 		ret = PTR_ERR(hdmi->phy);
- 		if (ret != -EPROBE_DEFER)
--			dev_err(hdmi->dev, "failed to get phy\n");
-+			dev_err(hdmi->dev, "failed to get phy: %d\n", ret);
- 		return ret;
- 	}
- 
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c 
 @@ -605,7 +605,12 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
  	}
  

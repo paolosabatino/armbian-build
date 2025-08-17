@@ -4018,7 +4018,7 @@ index 000000000000..14186365fdd4
 +	add_timer(&evif->beacon_timer);
 +}
 +
-+static int esp_op_config(struct ieee80211_hw *hw, u32 changed)
++static int esp_op_config(struct ieee80211_hw *hw, int radio_idx, u32 changed)
 +{
 +	//struct ieee80211_conf *conf = &hw->conf;
 +
@@ -4313,7 +4313,7 @@ index 000000000000..14186365fdd4
 +#endif
 +}
 +
-+static int esp_op_set_rts_threshold(struct ieee80211_hw *hw, u32 value)
++static int esp_op_set_rts_threshold(struct ieee80211_hw *hw, int radio_idx, u32 value)
 +{
 +	ESP_IEEE80211_DBG(ESP_DBG_TRACE, "%s enter \n", __func__);
 +

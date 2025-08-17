@@ -37690,7 +37690,7 @@ index 000000000000..111111111111
 +	return ret;
 +}
 +
-+static int ssv6200_config(struct ieee80211_hw *hw, u32 changed)
++static int ssv6200_config(struct ieee80211_hw *hw, int radio_idx, u32 changed)
 +{
 +	struct ssv_softc *sc = hw->priv;
 +	int ret = 0;
