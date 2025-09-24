@@ -5,7 +5,7 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3308-s0-ext-antenna.dtbo \
 	rk3308-b@1.3ghz.dtbo \
 	rk3308-bs.dtbo rk3308-bs@1.3ghz.dtbo \
-	rk3308-pcm5102a.dtbo \
+	rockchip-dusun-010r-rp3328b.dtbo \
 	rockchip-sakurapi-rk3308b-ws2812.dtbo \
 	rockchip-rockpi4cplus-usb-host.dtbo \
 	rockchip-rockpro64-lcd.dtbo \
@@ -93,8 +93,7 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rockchip-rk3588-uart7-m2.dtbo \
 	rockchip-rk3588-uart8-m1.dtbo \
 	rockchip-rk3588-rkvenc-overlay.dtbo \
-	rockchip-rk3588-nanopi-m6-spi-nor-flash.dtbo \
-	rockchip-rk3588-nanopi-m6-display-dsi1-yx35.dtbo \
+	rockchip-rk3588-nanopi-m6-spi-nor-flash.dtbo
 
 scr-$(CONFIG_ARCH_ROCKCHIP) += \
        rockchip-fixup.scr
