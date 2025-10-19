@@ -4,6 +4,7 @@ BOARD_NAME="rk3528-box"
 BOARDFAMILY="rk35xx"
 BOOTCONFIG="rk3528-box_defconfig"
 BOARD_MAINTAINER="jock"
+CONSOLE="" # console cmdline argument will be specified in the device tree
 KERNEL_TARGET="vendor"
 FULL_DESKTOP="yes"
 BOOT_LOGO="desktop"

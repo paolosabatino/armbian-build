@@ -1,0 +1,35 @@
+From 50e8ca6c18c9fdbc7f9e070d4fc7e536e2c0dceb Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Mon, 28 Jul 2025 10:29:44 +0000
+Subject: [PATCH 05/17] dt-bindings: phy: rockchip: naneng-combphy: Add
+ power-domains property
+
+Though isn't described in existing devicetrees, most Rockchip combphys
+belong to a specific power-domain of the SoC. Taking RK3588 as example,
+combphy 0 and combphy 2 belong to the PD_BUS domain. Document the
+power-domains property to allow describing the information correctly
+in devicetree.
+
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml   | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+index 3e101c3c5e..db293d2fbf 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+@@ -45,6 +45,9 @@ properties:
+   phy-supply:
+     description: Single PHY regulator
+ 
++  power-domains:
++    maxItems: 1
++
+   rockchip,enable-ssc:
+     type: boolean
+     description:
+-- 
+2.43.0
+

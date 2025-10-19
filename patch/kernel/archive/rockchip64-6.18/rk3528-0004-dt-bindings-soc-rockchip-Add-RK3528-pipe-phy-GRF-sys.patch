@@ -1,0 +1,30 @@
+From 5f25f4a6c6da4bda278a02bc262ab11d057e1f4e Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Mon, 28 Jul 2025 10:29:43 +0000
+Subject: [PATCH 04/17] dt-bindings: soc: rockchip: Add RK3528 pipe-phy GRF
+ syscon
+
+Add compatible string for pipe-phy GRF found on RK3528 SoC, which
+controls misc settings for the integrated naneng-combphy.
+
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index 1ab0b092e2..fe53617131 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -16,6 +16,7 @@ properties:
+           - enum:
+               - rockchip,rk3288-sgrf
+               - rockchip,rk3528-ioc-grf
++              - rockchip,rk3528-pipe-phy-grf
+               - rockchip,rk3528-vo-grf
+               - rockchip,rk3528-vpu-grf
+               - rockchip,rk3562-ioc-grf
+-- 
+2.43.0
+

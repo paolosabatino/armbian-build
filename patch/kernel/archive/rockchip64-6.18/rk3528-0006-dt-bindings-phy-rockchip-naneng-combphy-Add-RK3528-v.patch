@@ -1,0 +1,41 @@
+From 0f1957c657edce61ca71344b0bd6bb763340b923 Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Mon, 28 Jul 2025 10:29:45 +0000
+Subject: [PATCH 06/17] dt-bindings: phy: rockchip: naneng-combphy: Add RK3528
+ variant
+
+Rockchip RK3528 ships one naneng-combphy which operates in either PCIe
+or USB 3 mode. Document its compatible string.
+
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+index db293d2fbf..379b08bd9e 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+@@ -12,6 +12,7 @@ maintainers:
+ properties:
+   compatible:
+     enum:
++      - rockchip,rk3528-naneng-combphy
+       - rockchip,rk3562-naneng-combphy
+       - rockchip,rk3568-naneng-combphy
+       - rockchip,rk3576-naneng-combphy
+@@ -108,7 +109,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: rockchip,rk3588-naneng-combphy
++            enum:
++              - rockchip,rk3528-naneng-combphy
++              - rockchip,rk3588-naneng-combphy
+     then:
+       properties:
+         resets:
+-- 
+2.43.0
+

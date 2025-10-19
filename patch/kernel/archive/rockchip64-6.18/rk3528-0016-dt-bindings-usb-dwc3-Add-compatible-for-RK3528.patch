@@ -1,0 +1,47 @@
+From b809dfee72a44fc408908f0d86bf48af5e9e9b12 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 23 Jul 2025 12:23:04 +0000
+Subject: [PATCH 16/17] dt-bindings: usb: dwc3: Add compatible for RK3528
+
+The USB dwc3 core on Rockchip RK3528 is the same as the one already
+described by the generic snps,dwc3 schema.
+
+Add the compatible for the Rockchip RK3528 variant.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/rockchip,dwc3.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.yaml b/Documentation/devicetree/bindings/usb/rockchip,dwc3.yaml
+index fd1b13c0ed..0554dbc4b8 100644
+--- a/Documentation/devicetree/bindings/usb/rockchip,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.yaml
+@@ -26,6 +26,7 @@ select:
+       contains:
+         enum:
+           - rockchip,rk3328-dwc3
++          - rockchip,rk3528-dwc3
+           - rockchip,rk3562-dwc3
+           - rockchip,rk3568-dwc3
+           - rockchip,rk3576-dwc3
+@@ -38,6 +39,7 @@ properties:
+     items:
+       - enum:
+           - rockchip,rk3328-dwc3
++          - rockchip,rk3528-dwc3
+           - rockchip,rk3562-dwc3
+           - rockchip,rk3568-dwc3
+           - rockchip,rk3576-dwc3
+@@ -135,6 +137,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - rockchip,rk3528-dwc3
+               - rockchip,rk3568-dwc3
+               - rockchip,rk3576-dwc3
+     then:
+-- 
+2.43.0
+

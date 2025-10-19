@@ -1,0 +1,312 @@
+From 50c27cb201dd501a839cff9a1d8f85e4539084ae Mon Sep 17 00:00:00 2001
+From: Paolo Sabatino <paolo.sabatino@gmail.com>
+Date: Fri, 17 Oct 2025 20:47:20 +0200
+Subject: [PATCH] remove power domains because driver is broken in 6.17
+
+---
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 37 +++---------------------
+ 1 file changed, 4 insertions(+), 33 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+index 68c4d138e806..cd7c08ad756c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+@@ -155,7 +155,6 @@ gpio1: gpio@ffaf0000 {
+ 			gpio-ranges = <&pinctrl 0 32 32>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 		};
+ 
+ 		gpio2: gpio@ffb00000 {
+@@ -168,7 +167,6 @@ gpio2: gpio@ffb00000 {
+ 			gpio-ranges = <&pinctrl 0 64 32>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			power-domains = <&power RK3528_PD_VO>;
+ 		};
+ 
+ 		gpio3: gpio@ffb10000 {
+@@ -181,7 +179,6 @@ gpio3: gpio@ffb10000 {
+ 			gpio-ranges = <&pinctrl 0 96 32>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 		};
+ 
+ 		gpio4: gpio@ffb20000 {
+@@ -194,7 +191,6 @@ gpio4: gpio@ffb20000 {
+ 			gpio-ranges = <&pinctrl 0 128 32>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 		};
+ 	};
+ 
+@@ -251,7 +247,6 @@ usb_host0_xhci: usb@fe500000 {
+ 				 <&cru ACLK_USB3OTG>;
+ 			clock-names = "ref_clk", "suspend_clk", "bus_clk";
+ 			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_A_USB3OTG>;
+ 			dr_mode = "otg";
+ 			phy_type = "utmi_wide";
+@@ -287,7 +282,6 @@ usb_host0_ehci: usb@ff100000 {
+ 			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&u2phy_host>;
+ 			phy-names = "usb";
+-			power-domains = <&power RK3528_PD_VO>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -299,7 +293,6 @@ usb_host0_ohci: usb@ff140000 {
+ 			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&u2phy_host>;
+ 			phy-names = "usb";
+-			power-domains = <&power RK3528_PD_VO>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -544,6 +537,7 @@ power-domain@RK3528_PD_GPU {
+ 					pm_qos = <&qos_gpu_m0>,
+ 						 <&qos_gpu_m1>;
+ 					#power-domain-cells = <0>;
++					status = "disabled";
+ 				};
+ 
+ 				/* These power domains are grouped by VD_LOGIC */
+@@ -557,6 +551,7 @@ power-domain@RK3528_PD_RKVENC {
+ 					reg = <RK3528_PD_RKVENC>;
+ 					pm_qos = <&qos_rkvenc>;
+ 					#power-domain-cells = <0>;
++					status = "disabled";
+ 				};
+ 				power-domain@RK3528_PD_VO {
+ 					reg = <RK3528_PD_VO>;
+@@ -570,6 +565,7 @@ power-domain@RK3528_PD_VO {
+ 						 <&qos_vdpp>,
+ 						 <&qos_vop>;
+ 					#power-domain-cells = <0>;
++					status = "disabled";
+ 				};
+ 				power-domain@RK3528_PD_VPU {
+ 					reg = <RK3528_PD_VPU>;
+@@ -583,6 +579,7 @@ power-domain@RK3528_PD_VPU {
+ 						 <&qos_usb3otg>,
+ 						 <&qos_vpu>;
+ 					#power-domain-cells = <0>;
++					status = "disabled";
+ 				};
+ 			};
+ 		};
+@@ -610,7 +607,6 @@ gpu: gpu@ff700000 {
+ 					  "pp1",
+ 					  "ppmmu1";
+ 			operating-points-v2 = <&gpu_opp_table>;
+-			power-domains = <&power RK3528_PD_GPU>;
+ 			resets = <&cru SRST_A_GPU>;
+ 			status = "disabled";
+ 		};
+@@ -624,7 +620,6 @@ spi0: spi@ff9c0000 {
+ 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 25>, <&dmac 24>;
+ 			dma-names = "tx", "rx";
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -639,7 +634,6 @@ spi1: spi@ff9d0000 {
+ 			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 31>, <&dmac 30>;
+ 			dma-names = "tx", "rx";
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -664,7 +658,6 @@ uart1: serial@ff9f8000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 11>, <&dmac 10>;
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -677,7 +670,6 @@ uart2: serial@ffa00000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 13>, <&dmac 12>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -690,7 +682,6 @@ uart3: serial@ffa08000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 15>, <&dmac 14>;
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -703,7 +694,6 @@ uart4: serial@ffa10000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 17>, <&dmac 16>;
+-			power-domains = <&power RK3528_PD_VO>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -716,7 +706,6 @@ uart5: serial@ffa18000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 19>, <&dmac 18>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -729,7 +718,6 @@ uart6: serial@ffa20000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 21>, <&dmac 20>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -742,7 +730,6 @@ uart7: serial@ffa28000 {
+ 			clock-names = "baudclk", "apb_pclk";
+ 			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+ 			dmas = <&dmac 23>, <&dmac 22>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+ 			status = "disabled";
+@@ -755,7 +742,6 @@ i2c0: i2c@ffa50000 {
+ 			clocks = <&cru CLK_I2C0>, <&cru PCLK_I2C0>;
+ 			clock-names = "i2c", "pclk";
+ 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -768,7 +754,6 @@ i2c1: i2c@ffa58000 {
+ 			clocks = <&cru CLK_I2C1>, <&cru PCLK_I2C1>;
+ 			clock-names = "i2c", "pclk";
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_RKVENC>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -795,7 +780,6 @@ i2c3: i2c@ffa68000 {
+ 			clocks = <&cru CLK_I2C3>, <&cru PCLK_I2C3>;
+ 			clock-names = "i2c", "pclk";
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -810,7 +794,6 @@ i2c4: i2c@ffa70000 {
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c4_xfer>;
+-			power-domains = <&power RK3528_PD_VO>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -823,7 +806,6 @@ i2c5: i2c@ffa78000 {
+ 			clocks = <&cru CLK_I2C5>, <&cru PCLK_I2C5>;
+ 			clock-names = "i2c", "pclk";
+ 			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -836,7 +818,6 @@ i2c6: i2c@ffa80000 {
+ 			clocks = <&cru CLK_I2C6>, <&cru PCLK_I2C6>;
+ 			clock-names = "i2c", "pclk";
+ 			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -851,7 +832,6 @@ i2c7: i2c@ffa88000 {
+ 			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c7_xfer>;
+-			power-domains = <&power RK3528_PD_VO>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -943,7 +923,6 @@ saradc: adc@ffae0000 {
+ 			clocks = <&cru CLK_SARADC>, <&cru PCLK_SARADC>;
+ 			clock-names = "saradc", "apb_pclk";
+ 			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_P_SARADC>;
+ 			reset-names = "saradc-apb";
+ 			#io-channel-cells = <1>;
+@@ -964,7 +943,6 @@ gmac0: ethernet@ffbd0000 {
+ 			interrupt-names = "macirq", "eth_wake_irq";
+ 			phy-handle = <&rmii0_phy>;
+ 			phy-mode = "rmii";
+-			power-domains = <&power RK3528_PD_VO>;
+ 			resets = <&cru SRST_A_MAC_VO>;
+ 			reset-names = "stmmaceth";
+ 			rockchip,grf = <&vo_grf>;
+@@ -1023,7 +1001,6 @@ gmac1: ethernet@ffbe0000 {
+ 			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq", "eth_wake_irq";
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_A_MAC>;
+ 			reset-names = "stmmaceth";
+ 			rockchip,grf = <&vpu_grf>;
+@@ -1074,7 +1051,6 @@ sdhci: mmc@ffbf0000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&emmc_bus8>, <&emmc_clk>, <&emmc_cmd>,
+ 				    <&emmc_strb>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_C_EMMC>, <&cru SRST_H_EMMC>,
+ 				 <&cru SRST_A_EMMC>, <&cru SRST_B_EMMC>,
+ 				 <&cru SRST_T_EMMC>;
+@@ -1096,7 +1072,6 @@ sdio0: mmc@ffc10000 {
+ 			max-frequency = <200000000>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&sdio0_bus4>, <&sdio0_clk>, <&sdio0_cmd>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_H_SDIO0>;
+ 			reset-names = "reset";
+ 			status = "disabled";
+@@ -1116,7 +1091,6 @@ sdio1: mmc@ffc20000 {
+ 			max-frequency = <200000000>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&sdio1_bus4>, <&sdio1_clk>, <&sdio1_cmd>;
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_H_SDIO1>;
+ 			reset-names = "reset";
+ 			status = "disabled";
+@@ -1137,7 +1111,6 @@ sdmmc: mmc@ffc30000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&sdmmc_bus4>, <&sdmmc_clk>, <&sdmmc_cmd>,
+ 				    <&sdmmc_det>;
+-			power-domains = <&power RK3528_PD_VO>;
+ 			resets = <&cru SRST_H_SDMMC0>;
+ 			reset-names = "reset";
+ 			rockchip,default-sample-phase = <90>;
+@@ -1169,7 +1142,6 @@ u2phy: usb2phy@ffdf0000 {
+ 			clock-names = "phyclk", "pclk";
+ 			#clock-cells = <0>;
+ 			clock-output-names = "clk_usbphy_480m";
+-			power-domains = <&power RK3528_PD_VO>;
+ 			rockchip,usbgrf = <&vo_grf>;
+ 			status = "disabled";
+ 
+@@ -1200,7 +1172,6 @@ combphy: phy@ffdc0000 {
+ 				 <&cru PCLK_PCIE_PHY>,
+ 				 <&cru PCLK_PIPE_GRF>;
+ 			clock-names = "ref", "apb", "pipe";
+-			power-domains = <&power RK3528_PD_VPU>;
+ 			resets = <&cru SRST_PCIE_PIPE_PHY>,
+ 				 <&cru SRST_P_PCIE_PHY>;
+ 			reset-names = "phy", "apb";
+-- 
+2.43.0
+

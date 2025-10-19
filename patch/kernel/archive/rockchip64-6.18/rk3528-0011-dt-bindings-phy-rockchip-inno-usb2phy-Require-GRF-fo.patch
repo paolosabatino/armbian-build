@@ -1,0 +1,53 @@
+From bdfa45e30bec472fe6369de61f9139489ceb364e Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 23 Jul 2025 12:22:59 +0000
+Subject: [PATCH 11/17] dt-bindings: phy: rockchip,inno-usb2phy: Require GRF
+ for RK3568/RV1108
+
+Typically these Rockchip USB2 PHYs are fully contained within a single
+GRF. However, for RK3568 and RV1108 regs to control the USB2 PHY is
+located in a different GRF compared to the base address.
+
+Update this binding to require rockchip,usbgrf for RK3568 and RV1108 to
+properly reflect that the USB GRF is required to control the USB2 PHYs
+on these variants. Also disable use of rockchip,usbgrf for variants
+where it is not required.
+
+This should not introduce any breakage as the affected usb2phy nodes for
+RK3568 and RV1108 were added together with a rockchip,usbgrf phandle in
+their initial commit.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/phy/rockchip,inno-usb2phy.yaml        | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+index 58e735b5dd..b95c9e3e44 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+@@ -145,6 +145,20 @@ anyOf:
+       - host-port
+ 
+ allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3568-usb2phy
++              - rockchip,rv1108-usb2phy
++    then:
++      required:
++        - rockchip,usbgrf
++    else:
++      properties:
++        rockchip,usbgrf: false
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.43.0
+

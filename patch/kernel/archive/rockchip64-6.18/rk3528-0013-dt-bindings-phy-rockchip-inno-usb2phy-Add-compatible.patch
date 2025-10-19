@@ -1,0 +1,90 @@
+From 7b64174ecc4d24046998a250b78bb3259a5f31e5 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 23 Jul 2025 12:23:01 +0000
+Subject: [PATCH 13/17] dt-bindings: phy: rockchip,inno-usb2phy: Add compatible
+ for RK3528
+
+The embedded USB2 PHY on RK3528 is very similar to the one in RK3568,
+the main difference being that it only uses two clocks instead of three.
+
+Add compatible to support the USB2 PHY in RK3528.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/phy/rockchip,inno-usb2phy.yaml   | 30 ++++++++++++++++---
+ 1 file changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+index b95c9e3e44..f50fc69fbb 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+@@ -20,6 +20,7 @@ properties:
+       - rockchip,rk3328-usb2phy
+       - rockchip,rk3366-usb2phy
+       - rockchip,rk3399-usb2phy
++      - rockchip,rk3528-usb2phy
+       - rockchip,rk3562-usb2phy
+       - rockchip,rk3568-usb2phy
+       - rockchip,rk3576-usb2phy
+@@ -41,11 +42,15 @@ properties:
+     maxItems: 3
+ 
+   clock-names:
+-    minItems: 1
+-    items:
++    oneOf:
+       - const: phyclk
+-      - const: aclk
+-      - const: aclk_slv
++      - items:
++          - const: phyclk
++          - const: pclk
++      - items:
++          - const: phyclk
++          - const: aclk
++          - const: aclk_slv
+ 
+   assigned-clocks:
+     description:
+@@ -65,6 +70,9 @@ properties:
+     description: Muxed interrupt for both ports
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+   resets:
+     maxItems: 2
+ 
+@@ -150,6 +158,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - rockchip,rk3528-usb2phy
+               - rockchip,rk3568-usb2phy
+               - rockchip,rv1108-usb2phy
+     then:
+@@ -218,6 +227,19 @@ allOf:
+         clock-names:
+           maxItems: 1
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3528-usb2phy
++    then:
++      properties:
++        clocks:
++          minItems: 2
++        clock-names:
++          minItems: 2
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.43.0
+

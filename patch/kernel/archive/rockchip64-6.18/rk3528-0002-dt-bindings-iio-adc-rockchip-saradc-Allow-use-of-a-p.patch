@@ -1,0 +1,42 @@
+From c8a1095a5ebfc0a78537e22b431113c13aba886e Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 23 Jul 2025 08:56:45 +0000
+Subject: [PATCH 02/17] dt-bindings: iio: adc: rockchip-saradc: Allow use of a
+ power-domain
+
+The SARADC controller in most Rockchip SoCs are part of power domains
+that are always powered on, i.e. PD_BUS or PD_PERI. These always powered
+on power domains have typically not been described in the device tree.
+
+Because these power domains have been left out of the device tree there
+has not been any real need to properly describe the power domain of the
+SARADC controller.
+
+On RK3528 the SARADC controller is part of the PD_VPU power domain.
+
+Add support to describe an optional power-domains for the SARADC
+controller in Rockchip SoCs.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+index 41e0c56ef8..f776041fd0 100644
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+@@ -47,6 +47,9 @@ properties:
+       - const: saradc
+       - const: apb_pclk
+ 
++  power-domains:
++    maxItems: 1
++
+   resets:
+     maxItems: 1
+ 
+-- 
+2.43.0
+

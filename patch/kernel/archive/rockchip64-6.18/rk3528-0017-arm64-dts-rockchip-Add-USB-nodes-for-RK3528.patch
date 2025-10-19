@@ -1,0 +1,121 @@
+From fc5c4568494aea38de380183e9d09ff90f8ee7b9 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 23 Jul 2025 12:23:05 +0000
+Subject: [PATCH 17/17] arm64: dts: rockchip: Add USB nodes for RK3528
+
+Rockchip RK3528 has one USB 3.0 DWC3 controller, a USB 2.0 EHCI/OHCI
+controller and uses a USB2PHY for USB 2.0. The DWC3 controller may also
+use the Naneng Combo PHY for USB3.
+
+Add device tree nodes to describe these USB controllers along with the
+USB 2.0 PHYs.
+
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 76 ++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+index db5dbcac77..68c4d138e8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+@@ -243,6 +243,29 @@ soc {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 
++		usb_host0_xhci: usb@fe500000 {
++			compatible = "rockchip,rk3528-dwc3", "snps,dwc3";
++			reg = <0x0 0xfe500000 0x0 0x400000>;
++			clocks = <&cru CLK_REF_USB3OTG>,
++				 <&cru CLK_SUSPEND_USB3OTG>,
++				 <&cru ACLK_USB3OTG>;
++			clock-names = "ref_clk", "suspend_clk", "bus_clk";
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&power RK3528_PD_VPU>;
++			resets = <&cru SRST_A_USB3OTG>;
++			dr_mode = "otg";
++			phy_type = "utmi_wide";
++			snps,dis_enblslpm_quirk;
++			snps,dis-del-phy-power-chg-quirk;
++			snps,dis-tx-ipgap-linecheck-quirk;
++			snps,dis-u1-entry-quirk;
++			snps,dis-u2-entry-quirk;
++			snps,dis-u2-freeclk-exists-quirk;
++			snps,parkmode-disable-hs-quirk;
++			snps,parkmode-disable-ss-quirk;
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@fed01000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x0 0xfed01000 0 0x1000>,
+@@ -256,6 +279,30 @@ gic: interrupt-controller@fed01000 {
+ 			#interrupt-cells = <3>;
+ 		};
+ 
++		usb_host0_ehci: usb@ff100000 {
++			compatible = "generic-ehci";
++			reg = <0x0 0xff100000 0x0 0x40000>;
++			clocks = <&cru HCLK_USBHOST>, <&cru HCLK_USBHOST_ARB>,
++				 <&u2phy>;
++			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&u2phy_host>;
++			phy-names = "usb";
++			power-domains = <&power RK3528_PD_VO>;
++			status = "disabled";
++		};
++
++		usb_host0_ohci: usb@ff140000 {
++			compatible = "generic-ohci";
++			reg = <0x0 0xff140000 0x0 0x40000>;
++			clocks = <&cru HCLK_USBHOST>, <&cru HCLK_USBHOST_ARB>,
++				 <&u2phy>;
++			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&u2phy_host>;
++			phy-names = "usb";
++			power-domains = <&power RK3528_PD_VO>;
++			status = "disabled";
++		};
++
+ 		qos_crypto_a: qos@ff200000 {
+ 			compatible = "rockchip,rk3528-qos", "syscon";
+ 			reg = <0x0 0xff200000 0x0 0x20>;
+@@ -1115,6 +1162,35 @@ dmac: dma-controller@ffd60000 {
+ 			arm,pl330-periph-burst;
+ 		};
+ 
++		u2phy: usb2phy@ffdf0000 {
++			compatible = "rockchip,rk3528-usb2phy";
++			reg = <0x0 0xffdf0000 0x0 0x10000>;
++			clocks = <&cru CLK_REF_USBPHY>, <&cru PCLK_USBPHY>;
++			clock-names = "phyclk", "pclk";
++			#clock-cells = <0>;
++			clock-output-names = "clk_usbphy_480m";
++			power-domains = <&power RK3528_PD_VO>;
++			rockchip,usbgrf = <&vo_grf>;
++			status = "disabled";
++
++			u2phy_otg: otg-port {
++				interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "otg-bvalid", "otg-id",
++						  "linestate";
++				#phy-cells = <0>;
++				status = "disabled";
++			};
++
++			u2phy_host: host-port {
++				interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "linestate";
++				#phy-cells = <0>;
++				status = "disabled";
++			};
++		};
++
+ 		combphy: phy@ffdc0000 {
+ 			compatible = "rockchip,rk3528-naneng-combphy";
+ 			reg = <0x0 0xffdc0000 0x0 0x10000>;
+-- 
+2.43.0
+
