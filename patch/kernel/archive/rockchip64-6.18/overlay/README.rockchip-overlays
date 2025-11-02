@@ -210,6 +210,20 @@ wifi + bt chip and clones.
 
 Enable additional cpu "high-speed" bins up to 1.3ghz
 
+### rk3528-box-conf1
+
+GPIO configuration and peripherals for boards marked with RK3528-DDR3-8X4-V12,
+often marketed with HK96 Max in a circular case.
+
+### rk3528-box-conf2
+
+GPIO configuration and peripherals for boards marked with RK3528-X88PRO-13-D4,
+often marketed with X88 PRO 13.
+
+### rk3528-box-conf3
+
+GPIO configuration and peripherals for boards marked with B00-MX3596,
+often marketed with Transpeed Ultra 8K HD
 
 **********************************
 RK3308 OTG USB mode  (14 Sep 2025):

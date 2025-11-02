@@ -1,0 +1,88 @@
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/pinctrl/rockchip.h>
+#include <dt-bindings/leds/common.h>
+
+/**
+ * rk3528 tv box board with signature RK3528-DDR3-8X4-V12 and similar
+ * models
+ */
+
+ &{/} {
+
+	 model = "B00-MX3596";
+
+};
+
+&gpio_leds {
+
+
+	net-red {
+		gpios = <&gpio4 RK_PB5 GPIO_ACTIVE_HIGH>;
+		linux,default-trigger = "none";
+		default-state = "off";
+	};
+
+	net-green {
+		gpios = <&gpio4 RK_PC0 GPIO_ACTIVE_HIGH>;
+		linux,default-trigger = "none";
+		default-state = "off";
+	};
+
+	red {
+		gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_HIGH>;
+		linux,default-trigger = "none";
+		default-state = "off";
+		retain-state-suspended;
+		retain-state-shutdown;
+	};
+
+	green {
+		gpios = <&gpio4 RK_PB7 GPIO_ACTIVE_HIGH>;
+		linux,default-trigger = "timer";
+		default-state = "on";
+		retain-state-suspended;
+	};
+
+};
+
+&sdhci {
+	mmc-hs400-1_8v;
+	mmc-hs400-enhanced-strobe;
+	max-frequency = <150000000>;
+};
+
+&sdio0 {
+	status = "disabled";
+};
+
+&sdio1 {
+	status = "okay";
+};
+
+&sdmmc {
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-ddr50;
+	sd-uhs-sdr104;
+};
+
+&vcc5v0_host_regulator {
+	gpios = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
+};
+
+&sdio_pwrseq {
+	reset-gpios = <&gpio3 RK_PB2 GPIO_ACTIVE_LOW>;
+};
+
+&wifi_enable_h {
+	rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_output_high>;
+};
+
+&wifi_host_wake_irq {
+	rockchip,pins = <3 RK_PB3 RK_FUNC_GPIO &pcfg_pull_down>;
+};

@@ -33,7 +33,6 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rockchip-rk3328-opp-1.5ghz.dtbo \
 	rockchip-rk3328-spi-spidev.dtbo \
 	rockchip-rk3328-uart1.dtbo \
-	rockchip-rk3528-box-conf1.dtbo \
 	rockchip-rk3399-dwc3-0-host.dtbo \
 	rockchip-rk3399-i2c7.dtbo \
 	rockchip-rk3399-i2c8.dtbo \
@@ -43,6 +42,9 @@ dtbo-$(CONFIG_ARCH_ROCKCHIP) += \
 	rockchip-rk3399-spi-spidev.dtbo \
 	rockchip-rk3399-uart4.dtbo \
 	rockchip-rk3399-w1-gpio.dtbo \
+	rockchip-rk3528-box-conf1.dtbo \
+	rockchip-rk3528-box-conf2.dtbo \
+	rockchip-rk3528-box-conf3.dtbo \
 	rockchip-rk3566-sata2.dtbo \
 	rockchip-rk3568-nanopi-r5c-leds.dtbo \
 	rockchip-rk3568-nanopi-r5s-leds.dtbo \

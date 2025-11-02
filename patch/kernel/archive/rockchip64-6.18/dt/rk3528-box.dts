@@ -46,8 +46,15 @@
 		};
 	};
 
-	leds: gpio-leds {
+	gpio_leds: gpio-leds {
 		compatible = "gpio-leds";
+	};
+
+	ir-receiver {
+		compatible = "gpio-ir-receiver";
+		gpios = <&gpio4 RK_PC6 GPIO_ACTIVE_LOW>;
+		pinctrl-0 = <&ir_int>;
+		pinctrl-names = "default";
 	};
 
 	/*
@@ -485,6 +492,26 @@
 	status = "okay";
 };
 
+&sdio1 {
+	max-frequency = <200000000>;
+	no-sd;
+	no-mmc;
+	supports-sdio;
+	bus-width = <4>;
+	disable-wp;
+	cap-sd-highspeed;
+	cap-sdio-irq;
+	keep-power-in-suspend;
+	non-removable;
+	mmc-pwrseq = <&sdio_pwrseq>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdio1_bus4 &sdio1_cmd &sdio1_clk>;
+	vqmmc-supply = <&vdd_1v8_s3>;
+	vmmc-supply = <&vcc_3v3_s3>;
+	rockchip,default-sample-phase = <90>;
+	status = "disabled";
+};
+
 &sdmmc {
 	bus-width = <4>;
 	cap-mmc-highspeed;
@@ -598,6 +625,12 @@
 		};
 	};
 
+	infrared {
+		ir_int: ir-int{
+			rockchip,pins = <4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
 };
 
 &sdio0_bus4 {
@@ -661,12 +694,27 @@
 	status = "okay";
 };
 
+&combphy {
+	#phy-cells = <1>;
+	status = "okay";
+};
+
 &usb_host0_xhci {
-	extcon = <&u2phy>;
-	maximum-speed = "high-speed";
+	// maximum-speed = "high-speed";
 	dr_mode = "host";
-	phys = <&u2phy_otg>;
-	phy-names = "usb2-phy";
+	phys = <&u2phy_otg>, <&combphy 4>;
+	phy-names = "usb2-phy", "usb3-phy";
+	snps,dis_enblslpm_quirk;
+	snps,dis-u1-entry-quirk;
+	snps,dis-u2-entry-quirk;
+	snps,dis-u2-freeclk-exists-quirk;
+	snps,dis-del-phy-power-chg-quirk;
+	snps,dis-tx-ipgap-linecheck-quirk;
+	snps,xhci-trb-ent-quirk;
+	snps,dis_rxdet_inp3_quirk;
+	snps,parkmode-disable-hs-quirk;
+	snps,parkmode-disable-ss-quirk;
+	quirk-skip-phy-init;
 	status = "okay";
 };
 
