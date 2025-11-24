@@ -34,7 +34,7 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@dbf178ceecb9304128c8e0648591d71208c6e2c9 # v46.0.3
+        uses: tj-actions/changed-files@6da3c88b60ebf09464ada9b06fba5b6f2d34bb94 # v46.0.3
 
       - name: Checkout repository
         uses: actions/checkout@v5
