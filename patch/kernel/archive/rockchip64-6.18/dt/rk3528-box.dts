@@ -157,7 +157,7 @@
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi_enable_h &clkm1_32k_out>;
-		reset-gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&gpio1 RK_PA4 GPIO_ACTIVE_LOW>;
 	};
 
 	vcc5v0_sys: vcc5v0-sys {
@@ -267,6 +267,7 @@
 		regulator-name = "vccio_sd";
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
 		gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
 		vin-supply = <&vcc5v0_sys>;
 		states = <1800000 0x0
@@ -628,6 +629,17 @@
 	infrared {
 		ir_int: ir-int{
 			rockchip,pins = <4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
+	clk {
+
+		clkm0_32k_out: clkm0-32k-out {
+			rockchip,pins = <3 RK_PC3 3 &pcfg_pull_none>;
+		};
+
+		clkm1_32k_out: clkm1-32k-out {
+			rockchip,pins = <1 RK_PC3 1 &pcfg_pull_none>;
 		};
 	};
 
